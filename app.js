@@ -9,15 +9,24 @@ const weather= document.querySelector("#weather")
 
 
 const getWeather = async(city) => {
+    weather.innerHTML = `<h3> Loading.... </h3>`
+    
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
     const response = await fetch(url);
     const data = await response.json()
-    return showWeather(data)
+    return showWeather(data,data.name)
 
 }
-const showWeather=(data)=>{
-    weather.innerHTML = `
+const showWeather=(data, name)=>{
+    document.querySelector("#search").value=""
+
+    if( data.cod == "404" ) {
+        weather.innerHTML = `<h4>City Not Found </h4>`
+        return;
+    }
+    else{weather.innerHTML = `
     <div>
+        <h2>${name}</h2>
         <img src=" https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png " alt="icon">
     </div>
 
@@ -25,7 +34,7 @@ const showWeather=(data)=>{
         <h1>${data.main.temp}&#8451</h1>
         <h4>${data.weather[0].main}</h4>
     </div>      
-    `
+    `}
 }
 
 form.addEventListener(
